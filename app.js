@@ -13,6 +13,7 @@ app.use(cors());
 
 app.get('/addSubscriber', (req, res) => {
   let status = mailchimp.addSubscriber();
+  console.log(status);
   res.send('Hello World! ' + status)
 });
 
