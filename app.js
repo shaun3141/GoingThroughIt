@@ -11,10 +11,10 @@ app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get('/addSubscriber', (req, res) => {
-  let status = mailchimp.addSubscriber();
-  console.log(status);
-  res.send('Hello World! ' + status)
+app.post('/addSubscriber', (req, res) => {
+  let email = req.body.email;
+  console.log("Subscribing: |" + email + "|");
+  mailchimp.addSubscriber(email, res);
 });
 
 app.use(express.static(path.join(__dirname, './client/')));

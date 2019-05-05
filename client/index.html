@@ -65,6 +65,13 @@
         text-align: center;
         font-size: 24px;
       }
+
+      #topSubscribe {
+        background-color: #e040fb !important;
+        border-radius: 0px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
     </style>
   </head>
 
@@ -72,7 +79,10 @@
     <!-- Header -->
     <header class="container">
       <div class="row">
-        <div class="col s12" style="text-align: center; margin-top: 35px;">
+        <div style="text-align: right;">
+          <button data-target="modal1" id="topSubscribe" class="btn modal-trigger purple accent-2">Subscribe</button>
+        </div>
+        <div class="col s12" style="text-align: center; margin-top: 5px;">
           <img id="headerImg" src="./img/gti_logo.png">
         </div>
       </div>
@@ -176,7 +186,60 @@
       </div>
     </footer>
 
+    <!-- Modal Trigger -->
+  <a class="waves-effect purple accent-2 btn modal-trigger" href="#modal1">Subscribe</a>
+
+    <!-- Subscribe Modal -->
+    <div id="modal1" class="modal">
+      <div class="modal-content">
+        <h4 style="font-size: 24px">You're Awesome</h4>
+        <p>We'd love to send you an email when we have a new episode for you to listen to.</p>
+        <div class="input-field col s12">
+            <input id="email" type="email" class="validate">
+            <label for="email">Your Email</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div id="subscribeModalBtn" class="modal-close waves-effect waves-purple accent-2 btn-flat">Subscribe</div>
+      </div>
+    </div>
+
     <!--JavaScript at end of body for optimized loading-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.modal');
+        var instances = M.Modal.init(elems, {});
+      }); 
+      
+      function subscribe(email) {
+        console.log('"' + email + '" tried to be subscribed!');
+        $.ajax({
+          type: "POST",
+          url: "/addSubscriber",
+          data: JSON.stringify({"email": email}),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function(res) {
+            console.log(res);
+            if (res.status != "subscribed") {
+              M.toast({html: "Error: " + res.detail.split(". ")[0], classes: 'rounded purple accent-2'});
+              // Grab first sentence of error message. Second sentence is usually for developers.
+            } else {
+              M.toast({html: "You're subscribed, thanks!", classes: 'rounded purple accent-2'});
+            }
+          }
+        });
+      }
+
+      document.getElementById("subscribeModalBtn").onclick = function() {
+        // Grab Email
+        let email = $("#email").val()
+        subscribe(email)
+      };
+
+    </script>
   </body>
 </html>
