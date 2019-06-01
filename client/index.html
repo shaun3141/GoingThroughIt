@@ -72,6 +72,11 @@
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
       }
+
+      #mcCaptureModal {
+        border-radius: 5px;
+        border: 5px solid #e040fb;
+      }
     </style>
   </head>
 
@@ -80,7 +85,7 @@
     <header class="container">
       <div class="row">
         <div style="text-align: right;">
-          <button data-target="modal1" id="topSubscribe" class="btn modal-trigger purple accent-2">Subscribe</button>
+          <button data-target="mcCaptureModal" id="topSubscribe" class="btn modal-trigger purple accent-2">Subscribe</button>
         </div>
         <div class="col s12" style="text-align: center; margin-top: 5px;">
           <img id="headerImg" src="./img/gti_logo.png">
@@ -179,18 +184,16 @@
 
     <footer class="page-footer" style="padding: 10px; background-color: #333;">
       <div class="container">
-        © <script type="text/javascript">
-  document.write(new Date().getFullYear());
-</script> Going Through It
+        © <script type="text/javascript">document.write(new Date().getFullYear());</script> Going Through It
         <span class="grey-text text-lighten-4 right"><a style="color: white;" href="mailto:ask@goingthroughitpodcast.com">Connect with Us</a></span>
       </div>
     </footer>
 
     <!-- Modal Trigger -->
-  <a class="waves-effect purple accent-2 btn modal-trigger" href="#modal1">Subscribe</a>
+  <a class="waves-effect purple accent-2 btn modal-trigger" href="#mcCaptureModal">Subscribe</a>
 
     <!-- Subscribe Modal -->
-    <div id="modal1" class="modal">
+    <div id="mcCaptureModal" class="modal">
       <div class="modal-content">
         <h4 style="font-size: 24px">You're Awesome</h4>
         <p>We'd love to send you an email when we have a new episode for you to listen to.</p>
@@ -239,6 +242,24 @@
         let email = $("#email").val()
         subscribe(email)
       };
+
+      // Event Capture Helper
+      function addEvent(obj, evt, fn) {
+        if (obj.addEventListener) {
+          obj.addEventListener(evt, fn, false);
+        } else if (obj.attachEvent) {
+          obj.attachEvent("on" + evt, fn);
+        }
+      }
+
+      // Exit intent trigger
+      addEvent(document, 'mouseout', function(evt) {
+        if (evt.toElement === null && evt.relatedTarget === null && !localStorage.getItem('exitintent_show')) {
+          var modal = M.Modal.getInstance($('#mcCaptureModal')[0]);
+          modal.open();
+          localStorage.setItem('exitintent_show', 'true'); // Set the flag in localStorage
+        }
+      });
 
     </script>
 
